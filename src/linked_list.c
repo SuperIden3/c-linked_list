@@ -3,9 +3,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-typedef struct {
+typedef struct _node {
 	void *data;
-	Node *next;
+	struct _node *next;
 	bool in_memory; // Stack allocation must make this false, only functions that work with the heap should operate on this
 } Node;
 
@@ -33,7 +33,7 @@ int8_t Node__new(Node * *const nodeptr_addr, void *data, Node *next) {
 	(*nodeptr_addr)->next = next; // Set next to NULL (no next)
 	(*nodeptr_addr)->in_memory = true; // Indicate it's on the heap
 
-	return node; // Return
+	return 0; // Return
 }
 
 /**
