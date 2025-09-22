@@ -26,7 +26,7 @@ typedef struct {
 int8_t Node__new(Node * *const nodeptr_addr, void *data, Node *next) {
 	if (nodeptr_addr == NULL) return -1; // No Node to operate on
 
-	*nodeptr_addr = (Node *)malloc(sizeof(Node)); // Try to allocate
+	*nodeptr_addr = malloc(sizeof *nodeptr_addr); // Try to allocate
 	if (*nodeptr_addr == NULL) return 1; // Failed allocation
 
 	(*nodeptr_addr)->data = data; // Make Node's data point to given data
@@ -65,7 +65,7 @@ int8_t Node__init(Node * *const nodeptr_addr, void *data, Node *next) {
 /**
  * @brief Free a `Node` from the heap.
  * @param nodeptr_addr The address of a `Node *`
- * @return -1 if `nodeptr_addr == NULL`, 0 on success, and 1 if the Node's `in_memory` member holds `true`.
+ * @return -1 if `nodeptr_addr == NULL`, 0 on success, and 1 if the Node's `in_memory` member holds `false`.
  */
 int8_t Node__free(Node * *const nodeptr_addr) {
 	if (nodeptr_addr == NULL) return -1; // No Node to free
@@ -77,4 +77,40 @@ int8_t Node__free(Node * *const nodeptr_addr) {
 
 	return 0;
 }
+
+/**
+ * @brief Frees all Nodes after the specified Node. This excludes that Node.
+ * @param nodeptr_addr The address of a `Node *`.
+ * @return -1 if `nodeptr_addr == NULL` or 0 on success.
+ */
+int8_t Node__free_nexts(Node * *const nodeptr_addr) {
+	if (nodeptr_addr == NULL) return -1; // No Node to operate on
+
+	Node *next = (*nodeptr_addr)->next; // Storing next
+	Node *after_next = NULL; // Storing after next
+
+	while (next != NULL) {
+		after_next = next->next; // Set after next to the new next's next first so that we don't dereference NULL
+		Node__free(&next); // Free next
+		next = after_next; // Set next to after next
+	}
+
+	return 0;
+}
+
+/**
+ * @brief Frees the specified Nodes and the Nodes after it. This includes that Node.
+ * @param nodeptr_addr The address of a `Node *`.
+ * @return -1 if `nodeptr_addr == NULL` or 0 on success.
+ */
+int8_t Node__free_now_and_nexts(Node * *const nodeptr_addr) {
+	if (nodeptr_addr == NULL) return -1;
+
+	Node__free_nexts(nodeptr_addr);
+	Node__free(nodeptr_addr);
+
+	return 0;
+}
+
+// --- //
 
