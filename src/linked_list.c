@@ -1,20 +1,30 @@
+#ifndef C_LINKED_LIST_H
+#define C_LINKED_LIST_H
+
 #include <stddef.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
 
 typedef struct _node {
-	void *data;
-	struct _node *next;
+	void *data; // Pointer to data
+	struct _node *next; // Pointer to next Node
 	bool in_memory; // Stack allocation must make this false, only functions that work with the heap should operate on this
 } Node;
 
 typedef struct {
-	Node *head;
-	Node *tail;
-	size_t size;
+	Node *head; // Pointer to first Node
+	Node *tail; // Pointer to last Node
+	size_t size; // Number of Nodes
 	bool in_memory; // Same with this one
 } LinkedList;
+
+// --- //
+
+#define SIZEOF_NODE (sizeof(Node))
+#define SIZEOF_LINKED_LIST (sizeof(LinkedList))
+
+// --- //
 
 /**
  * @brief Creates a new `Node`.
@@ -114,3 +124,4 @@ int8_t Node__free_now_and_nexts(Node * *const nodeptr_addr) {
 
 // --- //
 
+#endif // C_LINKED_LIST_H
