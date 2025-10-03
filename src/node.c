@@ -4,11 +4,12 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 #include "common.h"
 
 /**
- * @brief Creates a new `Node`.
+ * @brief Creates a new `Node` in memory.
  * @param nodeptr_addr The address of a `Node *`
  * @param data The data to point to.
  * @param next The next `Node` for the given `Node *` to point to.
@@ -24,7 +25,7 @@ int8_t Node__new(Node * *const nodeptr_addr, void *data, Node *next) {
 	(*nodeptr_addr)->next = next; // Set next to NULL (no next)
 	(*nodeptr_addr)->in_memory = true; // Indicate it's on the heap
 
-	return 0; // Return
+	return 0;
 }
 
 /**
@@ -63,6 +64,17 @@ Node *Node__from(void *data, Node *next) {
 	Node__new(&ret, data, next); // Node__new ends with ret either being an actual allocated Node or NULL
 	return ret; // Return a Node or NULL
 }
+
+// --- //
+
+int Node__fprintf(Node *nodeptr, FILE *out) {
+	if (nodeptr == NULL) return -1;
+	if (out == NULL) return -2;
+
+
+}
+
+// --- //
 
 /**
  * @brief Free a `Node` from the heap.
