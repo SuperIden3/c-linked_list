@@ -22,16 +22,19 @@ extern int8_t Node__new(Node * *const nodeptr_addr, void *data, Node *next);
 int8_t LinkedList__new(LinkedList * *const llptr_addr, Node *head, Node *tail) {
 	if (llptr_addr == NULL) return -1; // No LinkedList to operate on
 
-	*llptr_addr = malloc(sizeof *llptr_addr); // Try to allocate
+	*llptr_addr = malloc(SIZEOF_LINKED_LIST); // Try to allocate
 	if (*llptr_addr == NULL) return 1; // Failed allocation
 
 	// Set values
-	(*llptr_addr)->head = NULL;
-	(*llptr_addr)->tail = NULL;
-	(*llptr_addr)->size = 0;
+	(*llptr_addr)->head = head;
+	(*llptr_addr)->tail = tail;
+	(*llptr_addr)->size = count_nodes(head, tail);
 	(*llptr_addr)->in_memory = true; // Indicates it's in the heap
 
 	return 0;
 }
 
-int8_t LinkedList__auto_new(LinkedList * *const llptr_addr);
+int8_t LinkedList__auto_new(LinkedList * *const llptr_addr) {
+	if (llptr_addr == NULL) return -1;
+
+}

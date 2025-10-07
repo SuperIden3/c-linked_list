@@ -18,7 +18,7 @@
 int8_t Node__new(Node * *const nodeptr_addr, void *data, Node *next) {
 	if (nodeptr_addr == NULL) return -1; // No Node to operate on
 
-	*nodeptr_addr = malloc(sizeof *nodeptr_addr); // Try to allocate
+	*nodeptr_addr = malloc(SIZEOF_NODE); // Try to allocate
 	if (*nodeptr_addr == NULL) return 1; // Failed allocation
 
 	(*nodeptr_addr)->data = data; // Make Node's data point to given data
@@ -71,7 +71,8 @@ int Node__fprintf(Node *nodeptr, FILE *out) {
 	if (nodeptr == NULL) return -1;
 	if (out == NULL) return -2;
 
-
+	int printed = fprintf(out, "Node%s { %p } -> %p\n", nodeptr->in_memory ? " (heap)" : "", nodeptr->data, (void*)nodeptr->next);
+	return printed;
 }
 
 // --- //
@@ -108,7 +109,7 @@ int8_t Node__free_nexts(Node * *const nodeptr_addr) {
 
 	while (next != NULL) {
 		after_next = next->next; // Set after next to the new next's next first so that we don't dereference NULL
-		Node__free(&next); // Free next
+		Node__free(&next, true); // Free next
 		next = after_next; // Set next to after next
 	}
 
@@ -124,7 +125,7 @@ int8_t Node__free_now_and_nexts(Node * *const nodeptr_addr) {
 	if (nodeptr_addr == NULL) return -1; // No Node to operate on
 
 	Node__free_nexts(nodeptr_addr); // Call Node__free_nexts to free consecutive Nodes and to store the current to also free it
-	Node__free(nodeptr_addr); // Free the current Node
+	Node__free(nodeptr_addr, true); // Free the current Node
 
 	return 0;
 }
